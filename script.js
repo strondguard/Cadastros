@@ -1,4 +1,4 @@
-    const GOOGLE_APPS_SCRIPT_URL = 'COLE_AQUI_O_URL_DO_SEU_APPS_SCRIPT_PRINCIPAL'; // URL para POST (salvar) e GET (configurações)
+    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz7RrNBg1sTW5M4U5t-bYQk1djVdu7ZIdQI4iSwpIID0PVG719O0WfiFhNtFJ5ym4Vb3A/exec'; // URL para POST (salvar) e GET (configurações)
 
     // Mapeamento dos campos do formulário para as configurações
     const formFields = [
@@ -335,4 +335,5 @@
             });
         });
     });
+
     
