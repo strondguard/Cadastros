@@ -1,0 +1,271 @@
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sistema de Hospedagem - Admin</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            /* Mantenha todo o CSS do admin aqui, como no passo anterior */
+            /* Reset de estilos e configuração geral */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Roboto', sans-serif;
+            }
+
+            /* Estilização do corpo da página */
+            body {
+                min-height: 100vh;
+                background-image: linear-gradient(45deg, #2c3e50, #34495e); /* Tons de azul escuro/cinza */
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                color: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                padding: 20px;
+                overflow-y: auto;
+            }
+
+            /* Estilos específicos para o Admin Panel */
+            .admin-container {
+                max-width: 100%;
+                width: 1000px; /* Largura maior para o admin */
+                background: rgba(255, 255, 255, 0.98);
+                padding: 25px;
+                border-radius: 10px;
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+                flex: 0 1 auto;
+                color: #34495e;
+            }
+            .admin-container h1, .admin-container h2 {
+                color: #2c3e50;
+            }
+            .admin-container label {
+                color: #34495e;
+            }
+            .admin-container .switch {
+                position: relative;
+                display: inline-block;
+                width: 50px; /* Largura menor */
+                height: 28px; /* Altura menor */
+            }
+            .admin-container .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+            .admin-container .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                transition: .4s;
+                border-radius: 28px; /* Ajustado para a nova altura */
+            }
+            .admin-container .slider:before {
+                position: absolute;
+                content: "";
+                height: 20px; /* Altura menor */
+                width: 20px; /* Largura menor */
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+            }
+            .admin-container input:checked + .slider {
+                background-color: #3498db; /* Azul vibrante */
+            }
+            .admin-container input:focus + .slider {
+                box-shadow: 0 0 1px #3498db;
+            }
+            .admin-container input:checked + .slider:before {
+                transform: translateX(22px); /* Ajustado para a nova largura */
+            }
+
+            /* Botões do Admin */
+            .admin-container button {
+                width: auto; /* Ajuste para botões menores */
+                padding: 8px 12px; /* Ajuste de padding */
+                margin: 5px; /* Espaçamento entre botões */
+                border: none;
+                border-radius: 6px;
+                background-color: #3498db; /* Azul vibrante */
+                color: white;
+                font-size: 0.9rem; /* Levemente menor */
+                font-weight: 700;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.2s;
+            }
+            .admin-container button:hover {
+                background-color: #2980b9; /* Azul mais escuro */
+                transform: translateY(-1px); /* Efeito sutil de elevação */
+            }
+            .admin-container button:active {
+                transform: translateY(0);
+            }
+            .admin-container #save-config {
+                background-color: #2ecc71; /* Verde para salvar */
+            }
+            .admin-container #save-config:hover {
+                background-color: #27ae60;
+            }
+            .admin-container .delete-registro {
+                background-color: #e74c3c; /* Vermelho para excluir */
+            }
+            .admin-container .delete-registro:hover {
+                background-color: #c0392b;
+            }
+            .admin-container .view-registro {
+                background-color: #f39c12; /* Laranja para ver */
+            }
+            .admin-container .view-registro:hover {
+                background-color: #e67e22;
+            }
+
+            /* Tabela do Admin */
+            .admin-container table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 15px;
+            }
+            .admin-container th, .admin-container td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid #ecf0f1;
+                font-size: 0.9rem;
+            }
+            .admin-container th {
+                background-color: #f2f4f6;
+                font-weight: 600;
+                color: #555;
+                text-transform: uppercase;
+            }
+            .admin-container tr:hover {
+                background-color: #f9f9f9;
+            }
+            .admin-container .registro-checkbox {
+                width: 18px;
+                height: 18px;
+                accent-color: #3498db; /* Cor do checkbox */
+            }
+
+            /* Responsividade da tabela do Admin */
+            @media (max-width: 768px) {
+                .admin-container .overflow-x-auto {
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch; /* Para rolagem suave em iOS */
+                }
+                .admin-container table {
+                    min-width: 600px; /* Garante que a tabela não encolha demais */
+                }
+                .admin-container th, .admin-container td {
+                    padding: 8px 10px;
+                    font-size: 0.85rem;
+                }
+                .admin-container .switch {
+                    width: 40px;
+                    height: 22px;
+                }
+                .admin-container .slider:before {
+                    height: 16px;
+                    width: 16px;
+                    left: 3px;
+                    bottom: 3px;
+                }
+                .admin-container input:checked + .slider:before {
+                    transform: translateX(18px);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="admin-page" class="admin-container">
+            <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Painel Administrativo</h1>
+            
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold mb-4">Configurações do Formulário</h2>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200 mb-4">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campo</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Obrigatório</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visível</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="form-config-table-body">
+                            <!-- Configurações de campo serão inseridas aqui via JS -->
+                        </tbody>
+                    </table>
+                    <div class="flex items-center mb-4">
+                        <label for="cpfMinAge" class="block text-gray-700 text-sm font-bold mr-2">Idade Mínima para CPF Obrigatório:</label>
+                        <input type="number" id="cpfMinAge" min="0" max="120" value="9" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-20">
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <button id="save-config" class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded">Salvar Configurações</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold mb-4">Registros de Hospedagem</h2>
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3">
+                    <div class="relative w-full sm:w-auto">
+                        <input type="text" id="search-registros" placeholder="Buscar registros..." class="pl-10 pr-4 py-2 border rounded-lg text-gray-800 w-full">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <button id="generate-selected-pdf" class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded flex items-center w-full sm:w-auto">
+                        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Gerar PDF Selecionados
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <input type="checkbox" id="select-all-registros" class="rounded text-red-600">
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome Titular</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CPF Titular</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pessoas</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data Registro</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="registros-list" class="bg-white divide-y divide-gray-200">
+                            <!-- Registros de hospedagem serão inseridos aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="fixed top-4 right-4">
+            <a href="index.html" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded shadow-lg transition-all flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Voltar
+            </a>
+        </div>
+        <script src="admin-script.js"></script>
+    </body>
+    </html>
+    

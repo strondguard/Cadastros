@@ -1,0 +1,288 @@
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sistema de Hospedagem - Cadastro</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+        <style>
+            /* Mantenha todo o CSS do cliente aqui, como no passo anterior */
+            /* Reset de estilos e configuração geral */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Roboto', sans-serif;
+            }
+
+            /* Estilização do corpo da página */
+            body {
+                min-height: 100vh;
+                background-image: linear-gradient(45deg, #2c3e50, #34495e); /* Tons de azul escuro/cinza */
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                color: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                padding: 20px;
+                overflow-y: auto;
+            }
+
+            /* Container principal */
+            .container {
+                max-width: 100%;
+                width: 800px;
+                background: rgba(255, 255, 255, 0.98); /* Quase branco, levemente transparente */
+                padding: 20px;
+                border-radius: 10px; /* Bordas mais suaves */
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); /* Sombra mais pronunciada */
+                flex: 0 1 auto;
+                color: #34495e; /* Cor do texto principal */
+            }
+
+            /* Títulos */
+            h1 {
+                text-align: center;
+                font-style: normal; /* Removido itálico */
+                font-size: 2.2rem; /* Levemente maior */
+                font-weight: 700; /* Mais negrito */
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+                color: #2c3e50; /* Azul escuro */
+                margin-bottom: 25px;
+            }
+            h2 {
+                font-style: normal; /* Removido itálico */
+                font-weight: 700; /* Mais negrito */
+                font-size: 1.4rem; /* Levemente maior */
+                text-shadow: none;
+                color: #2c3e50; /* Azul escuro */
+                margin: 20px 0 12px;
+                border-bottom: 2px solid #ecf0f1; /* Linha sutil */
+                padding-bottom: 5px;
+            }
+            .acompanhante h3 {
+                font-size: 1.1rem; /* Levemente maior */
+                font-weight: 700;
+                color: #34495e;
+                margin-bottom: 10px;
+            }
+
+            /* Labels */
+            label {
+                display: block;
+                margin: 12px 0 6px; /* Espaçamento ajustado */
+                color: #34495e;
+                font-weight: 600; /* Mais negrito */
+                font-size: 0.95rem; /* Levemente maior */
+            }
+
+            /* Inputs e Selects */
+            input, select {
+                width: 100%;
+                padding: 10px; /* Padding maior */
+                margin-bottom: 12px; /* Espaçamento ajustado */
+                border: 1px solid #bdc3c7; /* Borda mais suave */
+                border-radius: 6px; /* Bordas mais suaves */
+                font-size: 0.95rem;
+                background-color: #f8f9fa; /* Fundo levemente cinza */
+                color: #34495e;
+                transition: border-color 0.3s, box-shadow 0.3s;
+            }
+            input:focus, select:focus {
+                border-color: #3498db; /* Azul vibrante no foco */
+                outline: none;
+                box-shadow: 0 0 8px rgba(52, 152, 219, 0.4); /* Sombra azul no foco */
+            }
+
+            /* Seção de acompanhantes */
+            .acompanhante {
+                border: 1px solid #bdc3c7;
+                padding: 18px; /* Padding maior */
+                margin-bottom: 18px;
+                border-radius: 8px;
+                background-color: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Botões */
+            button {
+                width: 100%;
+                padding: 12px; /* Padding maior */
+                margin: 15px 0 5px; /* Espaçamento ajustado */
+                border: none;
+                border-radius: 6px;
+                background-color: #3498db; /* Azul vibrante */
+                color: white;
+                font-size: 1rem; /* Levemente maior */
+                font-weight: 700;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.2s;
+            }
+            button:hover {
+                background-color: #2980b9; /* Azul mais escuro no hover */
+                transform: translateY(-2px); /* Efeito sutil de elevação */
+            }
+            button:active {
+                transform: translateY(0);
+            }
+
+            /* Mensagens de erro */
+            .error {
+                color: red;
+                font-size: 0.85rem;
+                display: none;
+                margin-top: -8px; /* Ajuste para ficar mais próximo do campo */
+                margin-bottom: 12px;
+                font-weight: 500;
+            }
+
+            /* Campo obrigatório */
+            .required-field::after {
+                content: " *";
+                color: #e74c3c; /* Vermelho para o asterisco */
+                font-weight: bold;
+            }
+
+            /* Media queries para telas menores */
+            @media (max-width: 768px) {
+                body {
+                    padding: 15px;
+                }
+                .container {
+                    width: 100%;
+                    padding: 15px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                }
+                h1 {
+                    font-size: 1.8rem;
+                    margin-bottom: 20px;
+                }
+                h2 {
+                    font-size: 1.2rem;
+                    margin: 15px 0 10px;
+                }
+                .acompanhante h3 {
+                    font-size: 1rem;
+                }
+                label, input, select, button {
+                    font-size: 0.9rem;
+                    padding: 8px;
+                }
+                button {
+                    padding: 10px;
+                    font-size: 0.95rem;
+                }
+                .error {
+                    font-size: 0.8rem;
+                }
+            }
+
+            @media (max-width: 480px) {
+                body {
+                    padding: 10px;
+                }
+                .container {
+                    padding: 10px;
+                }
+                h1 {
+                    font-size: 1.6rem;
+                    margin-bottom: 15px;
+                }
+                h2 {
+                    font-size: 1.1rem;
+                    margin: 12px 0 8px;
+                }
+                .acompanhante {
+                    padding: 15px;
+                    margin-bottom: 15px;
+                }
+                label, input, select, button {
+                    font-size: 0.85rem;
+                    padding: 7px;
+                }
+                button {
+                    padding: 9px;
+                    font-size: 0.9rem;
+                }
+                .error {
+                    font-size: 0.75rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="client-page" class="container">
+            <h1>Formulário de Hospedagem</h1>
+            <form id="hospedagemForm">
+                <label for="numPessoas" id="label-numPessoas">Quantas pessoas ficarão no quarto? (Máx. 6)</label>
+                <select id="numPessoas" required aria-required="true" aria-label="Quantidade de pessoas">
+                    <option value="">Selecione</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+                <span class="error" id="numPessoasError">Selecione a quantidade de pessoas</span>
+
+                <h2>Dados do Titular</h2>
+                <label for="nomeTitular" id="label-nomeTitular">Nome Completo</label>
+                <input type="text" id="nomeTitular" required aria-required="true" aria-label="Nome completo do titular">
+                <span class="error" id="nomeTitularError">Nome completo é obrigatório</span>
+                <label for="dataNascTitular" id="label-dataNascTitular">Data de Nascimento</label>
+                <input type="text" id="dataNascTitular" placeholder="DD/MM/AAAA" required aria-required="true" aria-label="Data de nascimento do titular">
+                <span class="error" id="dataNascTitularError">Data de nascimento inválida</span>
+                <label for="cpfTitular" id="label-cpfTitular">CPF</label>
+                <input type="text" id="cpfTitular" required aria-required="true" aria-label="CPF do titular">
+                <span class="error" id="cpfTitularError">CPF inválido</span>
+                <label for="rgTitular" id="label-rgTitular">RG (Opcional)</label>
+                <input type="text" id="rgTitular" aria-label="RG do titular">
+                <label for="celularTitular" id="label-celularTitular">Celular</label>
+                <input type="text" id="celularTitular" required aria-required="true" aria-label="Celular do titular">
+                <span class="error" id="celularTitularError">Celular inválido</span>
+                <label for="emailTitular" id="label-emailTitular">Email</label>
+                <input type="email" id="emailTitular" required aria-required="true" aria-label="Email do titular">
+                <span class="error" id="emailTitularError">Email inválido</span>
+                <label for="placaCarro" id="label-placaCarro">Placa do Carro (Opcional)</label>
+                <input type="text" id="placaCarro" aria-label="Placa do carro">
+
+                <h2>Endereço</h2>
+                <label for="cep" id="label-cep">CEP</label>
+                <input type="text" id="cep" required aria-required="true" aria-label="CEP">
+                <span class="error" id="cepError">CEP inválido ou não preenchido</span>
+                <label for="numero" id="label-numero">Número</label>
+                <input type="text" id="numero" aria-label="Número do endereço">
+                <label for="rua" id="label-rua">Rua</label>
+                <input type="text" id="rua" required aria-required="true" aria-label="Rua">
+                <span class="error" id="ruaError">Rua é obrigatória</span>
+                <label for="bairro" id="label-bairro">Bairro</label>
+                <input type="text" id="bairro" required aria-required="true" aria-label="Bairro">
+                <span class="error" id="bairroError">Bairro é obrigatório</span>
+                <label for="cidade" id="label-cidade">Cidade</label>
+                <input type="text" id="cidade" required aria-required="true" aria-label="Cidade">
+                <span class="error" id="cidadeError">Cidade é obrigatória</span>
+
+                <h2>Acompanhantes</h2>
+                <div id="acompanhantes"></div>
+
+                <button type="submit" id="salvarHospedagem" aria-label="Salvar formulário de hospedagem">Salvar Hospedagem</button>
+            </form>
+        </div>
+        <div class="fixed top-4 right-4">
+            <a href="admin.html" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded shadow-lg transition-all flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" />
+                </svg>
+                Admin
+            </a>
+        </div>
+        <script src="script.js"></script>
+    </body>
+    </html>
+    
