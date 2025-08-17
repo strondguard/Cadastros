@@ -3,7 +3,7 @@
     let registrosHospedagem = [];
     const ADMIN_PASSWORD = "admin123"; // Senha de acesso ao painel administrativo (ainda no frontend, cuidado!)
 
-    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz7RrNBg1sTW5M4U5t-bYQk1djVdu7ZIdQI4iSwpIID0PVG719O0WfiFhNtFJ5ym4Vb3A/exec'; // URL ÚNICO para todas as operações
+    const GOOGLE_APPS_SCRIPT_URL = 'hhttps://script.google.com/macros/s/AKfycbz7RrNBg1sTW5M4U5t-bYQk1djVdu7ZIdQI4iSwpIID0PVG719O0WfiFhNtFJ5ym4Vb3A/exec'; // URL ÚNICO para todas as operações
 
     // Mapeamento dos campos do formulário para as configurações
     const formFields = [
